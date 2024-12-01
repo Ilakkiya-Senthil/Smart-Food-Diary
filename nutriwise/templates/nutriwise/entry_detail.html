@@ -1,0 +1,26 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Food Analysis</title>
+</head>
+<body>
+    <h1>{{ entry.title }}</h1>
+    <img src="{{ entry.image.url }}" alt="Uploaded Image" style="max-width: 400px;">
+    <h2>Analysis Results</h2>
+
+    {% if entry.api_response %}
+        <h3>Analysis Details:</h3>
+        <pre>{{ entry.api_response|json_script:"apiResponse" }}</pre>
+        <script>
+            const response = JSON.parse(document.getElementById("apiResponse").textContent);
+            console.log(response);
+        </script>
+    {% else %}
+        <p>No analysis data available.</p>
+    {% endif %}
+
+    <a href="{% url 'nutriwise:dashboard' %}">Back to Dashboard</a>
+</body>
+</html>

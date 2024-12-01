@@ -1,0 +1,100 @@
+{% load static %}
+
+{% block content %}
+<div class="container">
+    <!-- Top Section -->
+    <div class="header-box">
+        <div class="welcome-section">
+            <!-- Logo and Welcome Text -->
+            <link rel="stylesheet" href="{% static 'nutriwise/dashboard.css' %}">
+            <div class="logo-welcome">
+                <img src="https://i.postimg.cc/CdyBX8WW/NW-LOGO.jpg" alt="NutriWise Logo" class="logo">
+                <div>
+                    <h1>Welcome, {{ user.username|default:"User" }}!</h1>
+                    <p>{{ user.email }}</p>
+                </div>
+            </div>
+        </div>
+
+        <!-- Buttons Section -->
+        <div class="header-buttons">
+            <button class="menu-button" id="menuButton">Menu</button>
+            <a href="{% url 'nutriwise:upload_image' %}" class="upload-link">
+                <button class="upload-button">+ Upload</button>
+            </a>
+        </div>
+    </div>
+
+    <!-- Profile and Daily Goals Section -->
+    <div class="main-box">
+        <!-- Profile Section -->
+        <div class="profile-box">
+            <h2>Profile</h2>
+            <div class="profile-grid">
+                <div class="profile-item">
+                    <p>Height</p>
+                    <p>{{ user_profile.height|default:"Not Available" }} Cm</p>
+                </p>
+                </div>
+                <div class="profile-item">
+                    <p>Weight</p>
+                    <p>{% if user_profile.weight %}{{ user_profile.weight }}{% else %}Not Available{% endif %} Kg</p>
+
+                    
+                </div>
+                <div class="profile-item">
+                    <p>Age</p>
+                    <p>{{ user_profile.age|default:"Not Available" }}</p>
+                </div>
+                <div class="profile-item">
+                    <p>BMI</p>
+                    <p>{{ user_profile.bmi|default:"Not Available" }}</p>
+                    
+                </div>
+            </div>
+        </div>
+
+        <!-- Daily Goals Section -->
+        <div class="goals-box">
+            <h2>Daily Goals</h2>
+            <div class="goal-item">
+                <p>Calorie Goal</p>
+            </div>
+        </div>
+        
+    </div>
+</div>
+
+
+
+<script>
+    document.getElementById("menuButton").addEventListener("click", function() {
+        window.location.href = "{% url 'nutriwise:dashboard2' %}";
+    });
+</script>
+{% endblock %}
+
+<style>
+    .images-grid {
+        display: grid;
+        grid-template-columns: repeat(auto-fit, minmax(250px, 1fr));
+        gap: 16px;
+    }
+
+    .image-card {
+        border: 1px solid #ddd;
+        border-radius: 8px;
+        padding: 8px;
+        text-align: center;
+    }
+
+    .food-image {
+        max-width: 100%;
+        height: auto;
+        border-radius: 8px;
+    }
+
+    .image-details {
+        margin-top: 8px;
+    }
+</style>
