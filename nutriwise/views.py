@@ -19,7 +19,8 @@ def dashboard(request):
     uploaded_images = FoodDiaryEntry.objects.filter(user=request.user)
     context = {
         'user': request.user,
-        'user_profile': user_profile,  # Pass profile data to the template
+        'user_profile': user_profile,
+        'uploaded_images': uploaded_images,  
     }
     return render(request, 'nutriwise/dashboard.html', context)
 
@@ -39,10 +40,6 @@ def dashboard2(request):
 
     return render(request, 'nutriwise/dashboard2.html', {'user': request.user})
 
-from django.shortcuts import render, redirect
-from nutriwise.forms import FoodDiaryEntryForm
-from .models import FoodDiaryEntry
-from .api_utils import analyze_food_image
 
 def analyze_food(request):
     if request.method == 'POST':
@@ -70,27 +67,31 @@ def analyze_food(request):
     form = FoodDiaryEntryForm()
     return render(request, 'nutriwise/upload_image.html', {'form': form})
     
+@login_required
+
+
 def upload_image(request):
     if request.method == 'POST':
         form = FoodDiaryEntryForm(request.POST, request.FILES)
         if form.is_valid():
-            entry = form.save(commit=False)  # Do not save to the database yet
-            entry.user = request.user  # Assign the logged-in user
-            entry.save()  # Save after assigning the user
+            entry = form.save(commit=False)
+            entry.user = request.user
+            entry.save()  # Save the uploaded image
 
             # Analyze the uploaded image using Foodvisor API
             try:
-                api_response = analyze_food_image(entry.image.path)  # Process the uploaded image
-                entry.api_response = api_response  # Save API response to the entry
-                entry.save()
-                messages.success(request, "Image uploaded and analyzed successfully!")
+                api_response = analyze_food_image(entry.image.path)  # Call the API utility
+                if api_response:
+                    entry.api_response = api_response  # Save API response to the model
+                    entry.save()
+                    messages.success(request, "Image uploaded and analyzed successfully!")
+                    return redirect('nutriwise:dashboard')
+                else:
+                    messages.error(request, "Image analysis failed. Please try again.")
             except Exception as e:
-              # Optionally delete the entry if analysis fails
-                messages.error(request, "An error occurred while analyzing the image.")
-                entry.delete()
-                logger.error(f"Error analyzing image: {e}")
+                messages.error(request, f"An error occurred: {e}")
+                entry.delete()  # Optionally delete the entry if analysis fails
 
-            return redirect('nutriwise:dashboard')  # Redirect to the dashboard
         else:
             messages.error(request, "Invalid form submission.")
     else:
@@ -99,11 +100,12 @@ def upload_image(request):
     return render(request, 'nutriwise/upload_image.html', {'form': form})
 
 
+
 def analysis_result(request, entry_id):
     entry = get_object_or_404(FoodDiaryEntry, id=entry_id)
-    # Assuming `entry.api_response` contains the analysis data
-    analysis_data = entry.api_response
-    return render(request, 'nutriwise/entry_detail.html', {'entry': entry, 'analysis_data': analysis_data})
+    analysis_data = json.loads(entry.api_response)
+    formatted_analysis_data = json.dumps(analysis_data, indent=4)  # Pretty format the JSON data
+    return render(request, 'nutriwise/entry_detail.html', {'entry': entry, 'formatted_analysis_data': formatted_analysis_data})
 
 
 
