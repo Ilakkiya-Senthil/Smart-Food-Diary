@@ -131,7 +131,7 @@ STATICFILES_DIRS = [BASE_DIR / "static"]
 
 # Change STATIC_ROOT to a more appropriate path where the static files will be collected
 STATIC_ROOT = BASE_DIR / 'staticfiles'
-
+TIME_ZONE = 'Asia/Kolkata'
 
 # Default primary key field type
 # https://docs.djangoproject.com/en/5.1/ref/settings/#default-auto-field

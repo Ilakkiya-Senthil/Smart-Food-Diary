@@ -1,89 +1,45 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
+    {% load static %}
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Upload Image</title>
-    <style>
-        body {
-            font-family: 'Arial', sans-serif;
-            background: linear-gradient(to right, #f7f7f7, #e6e6e6);
-            display: flex;
-            justify-content: center;
-            align-items: center;
-            min-height: 100vh;
-            margin: 0;
-        }
-        .container {
-            background-color: #ffffff;
-            padding: 20px;
-            border-radius: 10px;
-            box-shadow: 0 4px 8px rgba(0, 0, 0, 0.1);
-            width: 100%;
-            max-width: 500px;
-            text-align: center;
-        }
-        h1 {
-            color: #333;
-            margin-bottom: 20px;
-        }
-        form {
-            display: flex;
-            flex-direction: column;
-            gap: 15px;
-        }
-        .form-group {
-            display: flex;
-            flex-direction: column;
-            align-items: flex-start;
-        }
-        input[type="text"], input[type="file"], button {
-            width: 100%;
-            padding: 10px;
-            border: 1px solid #ccc;
-            border-radius: 5px;
-            font-size: 1rem;
-        }
-        button {
-            background-color: #28a745;
-            color: #fff;
-            border: none;
-            cursor: pointer;
-            transition: background-color 0.3s;
-        }
-        button:hover {
-            background-color: #218838;
-        }
-        .back-link {
-            margin-top: 15px;
-            display: block;
-            text-decoration: none;
-            color: #007bff;
-            font-size: 0.9rem;
-            transition: color 0.3s;
-        }
-        .back-link:hover {
-            color: #0056b3;
-        }
-        .alert-messages {
-            margin-top: 20px;
-            padding: 10px;
-            border-radius: 5px;
-            background-color: #f8d7da;
-            color: #721c24;
-            text-align: center;
-        }
-    </style>
+    <title>Upload Food Image</title>
+    <link rel="stylesheet" href="{% static 'nutriwise/upload_image.css' %}">
+   
+        
 </head>
 <body>
-    <div class="container">
-        <h1>Upload Food Image</h1>
-        <form method="post" enctype="multipart/form-data">
+
+    <h1>Upload and Analyze Food Image</h1>
+
+    <div class="form-container">
+        <form method="POST" enctype="multipart/form-data">
             {% csrf_token %}
             {{ form.as_p }}
-            <button type="submit">Upload</button>
+            <button type="submit">Upload Image</button>
         </form>
-        <a class="back-link" href="{% url 'nutriwise:dashboard' %}">Back to Dashboard</a>
     </div>
+
+    {% if food_details.name != 'Unknown' %}
+    <div class="analysis-result">
+        <h3>Food Analysis Result</h3>
+        <ul type="none">
+            <li><strong>Name:</strong> {{ food_details.name }}</li>
+                <li><strong>Confidence:</strong> {{ food_details.confidence }}%</li>
+                <li><strong>Quantity:</strong> {{ food_details.quantity }} g</li>
+                <li><strong>Carbs:</strong> {{ food_details.carbs }} g</li>
+                <li><strong>Fats:</strong> {{ food_details.fats }} g</li>
+                <li><strong>Fiber:</strong> {{ food_details.fiber }} g</li>
+                <li><strong>Sugar:</strong> {{ food_details.sugar }} g</li>
+                <li><strong>Calories:</strong> {{ food_details.calories }} kcal</li>
+                <li><strong>Proteins:</strong> {{ food_details.proteins }} g</li>
+                <li><strong>Sodium:</strong> {{ food_details.sodium }} mg</li>
+                <li><strong>Vitamin C:</strong> {{ food_details.vitamin_c }} mg</li>
+           
+        </ul>
+    </div>
+    {% endif %}
+
 </body>
 </html>

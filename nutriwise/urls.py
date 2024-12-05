@@ -11,5 +11,5 @@ urlpatterns = [
     path('dashboard2/', views.dashboard2, name='dashboard2'),  # Separate route for dashboard2
     path('update_profile/', views.update_profile, name='update_profile'),
     path('upload_image/', views.upload_image, name='upload_image'),
-    path('entry/<int:entry_id>/', views.analysis_result, name='entry_detail'),
+    path('entry/<int:entry_id>/', views.analysis_result, name='analysis_result'),
     path('profile/', views.profile, name='profile'),]

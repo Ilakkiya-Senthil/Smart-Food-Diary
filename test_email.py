@@ -1,24 +1,18 @@
-from django.core.mail import send_mail
-from django.conf import settings
+import json
 
-def test_email():
-    try:
-        send_mail(
-            'Test Email',  # Subject
-            'This is a test email from Django.',  # Body
-            settings.EMAIL_HOST_USER,  # From email
-            ['yuvaakhil815@gmail.com'],  # Replace with your recipient email
-            fail_silently=False,
-        )
-        print("Email sent successfully!")
-    except Exception as e:
-        print(f"Failed to send email: {e}")
+# Your API response (Python dictionary)
+api_response = {
+    'analysis_id': '1c868a1b-e59d-4041-bb59-7fa0051ba9bb',
+    'scopes': ['nutrition:macro', 'nutrition:micro'],
+    'items': [
+        {
+            'position': {'x': 0.33, 'y': 0.0263, 'width': 0.5019, 'height': 0.8902},
+            'food': [{'confidence': 1.0, 'quantity': 211.0}]
+        }
+    ]
+}
 
-# Ensure Django settings are loaded
-if __name__ == "__main__":
-    import os
-    import django
+# Convert it to a JSON string with double quotes
+json_response = json.dumps(api_response, indent=4)
 
-    os.environ.setdefault('DJANGO_SETTINGS_MODULE', 'SmartFoodDiary.settings')  # Replace with your settings module
-    django.setup()
-    test_email()
+print(json_response)

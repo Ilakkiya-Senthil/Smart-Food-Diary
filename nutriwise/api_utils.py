@@ -3,7 +3,7 @@ import requests
 import logging
 
 API_URL = "https://vision.foodvisor.io/api/1.0/en/analysis/"
-API_KEY = "rLCchLLj.4rH9fCFxYTuPFiUkZAVyX48wlST1EbQs"
+API_KEY = 'TNWFnlBB.fgffWC7CvExZQrUvL7HiZfbfN3DrK3FM'
 HEADERS = {"Authorization": f"Api-Key {API_KEY}"}
 
 logger = logging.getLogger(__name__)
@@ -85,3 +85,33 @@ def print_analysis(data):
                 print(f"  - {ingredient['name']} ({ingredient['grade']})")
                 print(f"    Quantity: {ingredient['quantity']}g")
             print("-" * 40)
+from .models import FoodAnalysis
+
+def save_analysis_to_db(data, user):
+    """
+    Save the parsed analysis data into the database under the given user.
+    """
+    analysis, error = parse_analysis(data)
+    if error:
+        return {"error": error}
+
+    for item in analysis["items"]:
+        for food in item:
+            FoodAnalysis.objects.create(
+                user=user,
+                analysis_id=analysis["analysis_id"],
+                food_name=food["name"],
+                confidence=food["confidence"],
+                nutrition_grade=food["grade"],
+                quantity=food["quantity"],
+                nutrition_details=food["nutrition"],
+                ingredients=food["ingredients"],
+            )
+    return {"success": "Analysis data saved to database."}
+
+def handle_food_analysis(image_path, user):
+    """
+    Orchestrates the food analysis and saving to the database.
+    """
+    data = analyze_food_image(image_path)
+    return save_analysis_to_db(data, user)

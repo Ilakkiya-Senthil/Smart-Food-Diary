@@ -4,7 +4,7 @@ from .models import FoodDiaryEntry
 class FoodDiaryEntryForm(forms.ModelForm):
     class Meta:
         model = FoodDiaryEntry
-        fields = ['title', 'image', 'description']
+        fields = ['title', 'image', ]
 
 from .models import UserProfile
 

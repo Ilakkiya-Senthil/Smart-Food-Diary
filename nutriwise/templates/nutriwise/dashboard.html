@@ -32,6 +32,16 @@
             <h2>Profile</h2>
             <div class="profile-grid">
                 <div class="profile-item">
+                    <p>Age</p>
+                    <p>{{ user_profile.age|default:"Not Available" }}</p>
+                </div>
+                <div class="profile-item">
+                    <p>Gender</p>
+                    <p>{{ user_profile.gender|default:"Not Available" }}</p>
+                    
+                </div>
+                <div class="profile-item">
+                    
                     <p>Height</p>
                     <p>{{ user_profile.height|default:"Not Available" }} Cm</p>
                 </p>
@@ -42,15 +52,7 @@
 
                     
                 </div>
-                <div class="profile-item">
-                    <p>Age</p>
-                    <p>{{ user_profile.age|default:"Not Available" }}</p>
-                </div>
-                <div class="profile-item">
-                    <p>BMI</p>
-                    <p>{{ user_profile.bmi|default:"Not Available" }}</p>
-                    
-                </div>
+                
             </div>
         </div>
 
